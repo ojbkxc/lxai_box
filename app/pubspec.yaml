@@ -1,0 +1,69 @@
+name: lxai_box
+description: 蓝星 AI 机器人——跨平台极客量化工具箱
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 状态管理
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # 路由
+  go_router: ^14.8.1
+
+  # 网络
+  dio: ^5.7.0
+  web_socket_channel: ^3.0.2
+
+  # 本地数据库
+  drift: ^2.23.1
+  sqlite3_flutter_libs: ^0.5.28
+  sqlite3: ^2.7.3
+  path: ^1.9.1
+  path_provider: ^2.1.5
+
+  # 原生交互
+  pigeon: ^22.7.4
+
+  # 语音
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.2
+
+  # 图表
+  fl_chart: ^0.70.2
+
+  # 工具
+  intl: ^0.19.0
+  uuid: ^4.5.1
+  collection: ^1.19.1
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  shared_preferences: ^2.3.4
+  markdown_widget: ^2.3.2+6
+  flutter_highlight: ^0.7.0
+  highlight: ^0.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.15
+  riverpod_generator: ^2.6.2
+  riverpod_lint: ^2.6.3
+  drift_dev: ^2.23.1
+  json_serializable: ^6.9.4
+  freezed: ^2.5.7
+  mocktail: ^1.0.4
+  custom_lint: ^0.7.5
+  pigeon: ^22.7.4
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/prompts/
