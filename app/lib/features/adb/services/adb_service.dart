@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../native/adb_pigeon.dart';
+import '../native/adb_pigeon.g.dart';
 
 /// ADB 服务封装类
 class AdbService {

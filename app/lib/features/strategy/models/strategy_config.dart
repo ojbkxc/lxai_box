@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import '../engine/strategy.dart';
 import '../engine/strategies/ma_cross_strategy.dart';
