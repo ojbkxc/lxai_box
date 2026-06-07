@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lxai_box/features/trading/models/trading_strategy.dart';
 import 'package:lxai_box/features/trading/providers/trading_providers.dart';
 
 /// 量化交易主屏幕
@@ -47,8 +48,7 @@ class TradingScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               itemCount: data.length,
               itemBuilder: (context, index) {
-                final strategy = data[index];
-                return _StrategyCard(strategy: strategy);
+                return _StrategyCard(strategy: data[index]);
               },
             ),
           );
@@ -80,14 +80,12 @@ class TradingScreen extends ConsumerWidget {
 }
 
 class _StrategyCard extends ConsumerWidget {
-  final dynamic strategy;
+  final TradingStrategy strategy;
 
   const _StrategyCard({required this.strategy});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isRunning = strategy.status == 'running';
-
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -111,7 +109,7 @@ class _StrategyCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: isRunning ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                      color: strategy.isEnabled ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -121,15 +119,15 @@ class _StrategyCard extends ConsumerWidget {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: isRunning ? Colors.green : Colors.grey,
+                            color: strategy.isEnabled ? Colors.green : Colors.grey,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          isRunning ? '运行中' : '已停止',
+                          strategy.isEnabled ? '运行中' : '已停止',
                           style: TextStyle(
-                            color: isRunning ? Colors.green : Colors.grey,
+                            color: strategy.isEnabled ? Colors.green : Colors.grey,
                             fontSize: 12,
                           ),
                         ),
@@ -153,14 +151,8 @@ class _StrategyCard extends ConsumerWidget {
                   _StatChip(
                     icon: Icons.trending_up,
                     label: '收益',
-                    value: '${strategy.totalReturn.toStringAsFixed(2)}%',
-                    color: strategy.totalReturn >= 0 ? Colors.green : Colors.red,
-                  ),
-                  const SizedBox(width: 8),
-                  _StatChip(
-                    icon: Icons.swap_horiz,
-                    label: '交易',
-                    value: '${strategy.totalTrades}次',
+                    value: '${strategy.totalProfit.toStringAsFixed(2)}%',
+                    color: strategy.totalProfit >= 0 ? Colors.green : Colors.red,
                   ),
                   const SizedBox(width: 8),
                   _StatChip(
@@ -170,12 +162,17 @@ class _StrategyCard extends ConsumerWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
-                    color: isRunning ? Colors.red : Colors.green,
+                    icon: Icon(strategy.isEnabled ? Icons.stop : Icons.play_arrow),
+                    color: strategy.isEnabled ? Colors.red : Colors.green,
                     onPressed: () {
-                      ref.read(tradingServiceProvider(strategy.id).notifier).toggleRunning();
+                      final notifier = ref.read(strategyNotifierProvider.notifier);
+                      if (strategy.isEnabled) {
+                        notifier.stopStrategy(strategy.id);
+                      } else {
+                        notifier.startStrategy(strategy.id);
+                      }
                     },
-                    tooltip: isRunning ? '停止' : '启动',
+                    tooltip: strategy.isEnabled ? '停止' : '启动',
                   ),
                 ],
               ),

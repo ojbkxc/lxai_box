@@ -28,7 +28,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(currentSessionIdProvider.notifier).set(widget.sessionId);
+    ref.read(currentSessionIdProvider.notifier).state = widget.sessionId;
   }
 
   @override
@@ -41,15 +41,6 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final messages = ref.watch(chatMessagesProvider(widget.sessionId));
-    final stream = ref.watch(streamingControllerProvider);
-
-    // 监听流式消息
-    if (stream != null) {
-      stream.listen((message) {
-        ref.read(chatMessagesProvider(widget.sessionId).notifier).update(message);
-        _scrollToBottom();
-      });
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -57,20 +48,16 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       ),
       body: Column(
         children: [
-          // 消息列表
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: messages.length,
               itemBuilder: (context, index) {
-                final message = messages[index];
-                return _MessageBubble(message: message);
+                return _MessageBubble(message: messages[index]);
               },
             ),
           ),
-
-          // 输入区域
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -121,7 +108,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     );
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     final content = _messageController.text.trim();
     if (content.isEmpty || _isLoading) return;
 
@@ -129,14 +116,34 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     _messageController.clear();
 
     final messages = ref.read(chatMessagesProvider(widget.sessionId));
+    final service = ref.read(chatServiceProvider);
 
-    final stream = ref.read(chatServiceProvider).sendMessage(
-      sessionId: widget.sessionId,
-      content: content,
-      history: messages,
-    );
+    try {
+      await for (final message in service.sendMessage(
+        sessionId: widget.sessionId,
+        content: content,
+        history: messages,
+      )) {
+        final notifier = ref.read(chatMessagesProvider(widget.sessionId).notifier);
+        final existing = ref.read(chatMessagesProvider(widget.sessionId));
+        final index = existing.indexWhere((m) => m.id == message.id);
 
-    ref.read(streamingControllerProvider.notifier).setStream(stream);
+        if (index >= 0) {
+          notifier.update(message);
+        } else {
+          notifier.add(message);
+        }
+        _scrollToBottom();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('发送失败: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _scrollToBottom() {
@@ -173,7 +180,7 @@ class _MessageBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: isUser
               ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceVariant,
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -202,7 +209,6 @@ class _MessageBubble extends StatelessWidget {
                     color: isUser
                         ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.7)
                         : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),

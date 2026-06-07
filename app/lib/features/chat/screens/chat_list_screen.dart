@@ -54,7 +54,7 @@ class ChatListScreen extends ConsumerWidget {
                     tooltip: '删除',
                   ),
                   onTap: () {
-                    ref.read(currentSessionIdProvider.notifier).set(session.id);
+                    ref.read(currentSessionIdProvider.notifier).state = session.id;
                     context.push('/chat/${session.id}');
                   },
                 );
@@ -73,7 +73,7 @@ class ChatListScreen extends ConsumerWidget {
     );
 
     ref.read(chatSessionsProvider.notifier).add(session);
-    ref.read(currentSessionIdProvider.notifier).set(sessionId);
+    ref.read(currentSessionIdProvider.notifier).state = sessionId;
     context.push('/chat/$sessionId');
   }
 

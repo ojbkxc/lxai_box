@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/chat_message.dart';
+import '../models/chat_session.dart';
 import '../providers/chat_providers.dart';
 import '../services/chat_service.dart';
 
