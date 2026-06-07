@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate Android platform files
         working-directory: app
-        run: flutter create --org com.lanxing --project-name lxai_box --platforms android --force .
+        run: flutter create --org com.lanxing --project-name lxai_box --platforms android .
 
       - name: Verify generated files
         run: |
