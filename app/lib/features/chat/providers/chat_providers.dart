@@ -38,7 +38,7 @@ final chatSessionsProvider =
 /// 当前会话的消息列表（按 sessionId 分组）
 final chatMessagesProvider = StateNotifierProvider.family<
     ChatMessagesNotifier, List<ChatMessage>, String>(
-  (sessionId) => ChatMessagesNotifier(),
+  (ref, sessionId) => ChatMessagesNotifier(),
 );
 
 class ChatMessagesNotifier extends StateNotifier<List<ChatMessage>> {

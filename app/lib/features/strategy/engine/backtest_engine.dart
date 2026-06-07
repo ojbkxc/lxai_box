@@ -252,14 +252,14 @@ class BacktestEngine {
     // 年化收益
     final days = klines.last.timestamp.difference(klines.first.timestamp).inDays;
     final years = days / 365.0;
-    final annualizedReturn = years > 0 ? (pow(1 + totalReturn, 1 / years) - 1) : 0.0;
+    final annualizedReturn = years > 0 ? (pow(1 + totalReturn, 1.0 / years).toDouble() - 1) : 0.0;
 
     // 夏普比率
     final avgReturn = returns.isNotEmpty
         ? returns.reduce((a, b) => a + b) / returns.length
         : 0.0;
     final stdReturn = returns.isNotEmpty
-        ? sqrt(returns.map((r) => pow(r - avgReturn, 2)).reduce((a, b) => a + b) / returns.length)
+        ? sqrt(returns.map((r) => pow(r - avgReturn, 2).toDouble()).reduce((a, b) => a + b) / returns.length)
         : 0.0;
     final sharpeRatio = stdReturn > 0 ? (avgReturn / stdReturn) * sqrt(252) : 0.0;
 
