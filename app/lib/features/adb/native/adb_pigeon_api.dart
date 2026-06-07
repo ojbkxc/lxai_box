@@ -6,24 +6,21 @@ import 'adb_pigeon.dart';
 
 /// ADB 原生 API
 class AdbNativeApi {
-  static const MessageCodec<Object?> _channel = StandardMessageCodec();
+  static final _ch = MethodChannel('dev.flutter.pigeon.AdbNativeApi');
 
   Future<bool> isShizukuAvailable() async {
-    final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.isShizukuAvailable', _channel)
-        .invokeMethod<bool>('isShizukuAvailable');
+    final result = await _ch.invokeMethod<bool>('isShizukuAvailable');
     return result ?? false;
   }
 
   Future<bool> requestShizukuPermission() async {
-    final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.requestShizukuPermission', _channel)
-        .invokeMethod<bool>('requestShizukuPermission');
+    final result = await _ch.invokeMethod<bool>('requestShizukuPermission');
     return result ?? false;
   }
 
   Future<AdbCommandResult> executeCommand(String command) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.executeCommand', _channel)
-          .invokeMethod<List<dynamic>>('executeCommand', <Object?>[command]);
+      final result = await _ch.invokeMethod<List<dynamic>>('executeCommand', <Object?>[command]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -37,8 +34,7 @@ class AdbNativeApi {
 
   Future<AdbCommandResult> executeShellCommand(String command) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.executeShellCommand', _channel)
-          .invokeMethod<List<dynamic>>('executeShellCommand', <Object?>[command]);
+      final result = await _ch.invokeMethod<List<dynamic>>('executeShellCommand', <Object?>[command]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -52,8 +48,7 @@ class AdbNativeApi {
 
   Future<List<DeviceInfo>> getConnectedDevices() async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.getConnectedDevices', _channel)
-          .invokeMethod<List<dynamic>>('getConnectedDevices');
+      final result = await _ch.invokeMethod<List<dynamic>>('getConnectedDevices');
       if (result == null) return [];
       return result.map((e) {
         final list = e as List<dynamic>;
@@ -72,8 +67,7 @@ class AdbNativeApi {
 
   Future<DeviceInfo?> getCurrentDevice() async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.getCurrentDevice', _channel)
-          .invokeMethod<List<dynamic>>('getCurrentDevice');
+      final result = await _ch.invokeMethod<List<dynamic>>('getCurrentDevice');
       if (result == null) return null;
       return DeviceInfo(
         deviceId: result[0] as String,
@@ -89,8 +83,7 @@ class AdbNativeApi {
 
   Future<AdbCommandResult> connectDevice(String deviceId) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.connectDevice', _channel)
-          .invokeMethod<List<dynamic>>('connectDevice', <Object?>[deviceId]);
+      final result = await _ch.invokeMethod<List<dynamic>>('connectDevice', <Object?>[deviceId]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -104,8 +97,7 @@ class AdbNativeApi {
 
   Future<AdbCommandResult> disconnectDevice(String deviceId) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AdbNativeApi.disconnectDevice', _channel)
-          .invokeMethod<List<dynamic>>('disconnectDevice', <Object?>[deviceId]);
+      final result = await _ch.invokeMethod<List<dynamic>>('disconnectDevice', <Object?>[deviceId]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -120,12 +112,11 @@ class AdbNativeApi {
 
 /// 应用管理 API
 class AppManagerApi {
-  static const MessageCodec<Object?> _channel = StandardMessageCodec();
+  static final _ch = MethodChannel('dev.flutter.pigeon.AppManagerApi');
 
   Future<List<AppInfo>> getInstalledApps() async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.getInstalledApps', _channel)
-          .invokeMethod<List<dynamic>>('getInstalledApps');
+      final result = await _ch.invokeMethod<List<dynamic>>('getInstalledApps');
       if (result == null) return [];
       return result.map((e) {
         final list = e as List<dynamic>;
@@ -145,8 +136,7 @@ class AppManagerApi {
 
   Future<AdbCommandResult> installApp(String apkPath) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.installApp', _channel)
-          .invokeMethod<List<dynamic>>('installApp', <Object?>[apkPath]);
+      final result = await _ch.invokeMethod<List<dynamic>>('installApp', <Object?>[apkPath]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -160,8 +150,7 @@ class AppManagerApi {
 
   Future<AdbCommandResult> uninstallApp(String packageName) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.uninstallApp', _channel)
-          .invokeMethod<List<dynamic>>('uninstallApp', <Object?>[packageName]);
+      final result = await _ch.invokeMethod<List<dynamic>>('uninstallApp', <Object?>[packageName]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -175,8 +164,7 @@ class AppManagerApi {
 
   Future<AdbCommandResult> launchApp(String packageName) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.launchApp', _channel)
-          .invokeMethod<List<dynamic>>('launchApp', <Object?>[packageName]);
+      final result = await _ch.invokeMethod<List<dynamic>>('launchApp', <Object?>[packageName]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -190,8 +178,7 @@ class AppManagerApi {
 
   Future<AdbCommandResult> stopApp(String packageName) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.stopApp', _channel)
-          .invokeMethod<List<dynamic>>('stopApp', <Object?>[packageName]);
+      final result = await _ch.invokeMethod<List<dynamic>>('stopApp', <Object?>[packageName]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -205,8 +192,7 @@ class AppManagerApi {
 
   Future<AdbCommandResult> clearAppData(String packageName) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.clearAppData', _channel)
-          .invokeMethod<List<dynamic>>('clearAppData', <Object?>[packageName]);
+      final result = await _ch.invokeMethod<List<dynamic>>('clearAppData', <Object?>[packageName]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -220,8 +206,7 @@ class AppManagerApi {
 
   Future<bool> isAppInstalled(String packageName) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.AppManagerApi.isAppInstalled', _channel)
-          .invokeMethod<bool>('isAppInstalled', <Object?>[packageName]);
+      final result = await _ch.invokeMethod<bool>('isAppInstalled', <Object?>[packageName]);
       return result ?? false;
     } catch (e) {
       return false;
@@ -231,12 +216,11 @@ class AppManagerApi {
 
 /// 屏幕操作 API
 class ScreenApi {
-  static const MessageCodec<Object?> _channel = StandardMessageCodec();
+  static final _ch = MethodChannel('dev.flutter.pigeon.ScreenApi');
 
   Future<String> takeScreenshot(String outputPath) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.takeScreenshot', _channel)
-          .invokeMethod<String>('takeScreenshot', <Object?>[outputPath]);
+      final result = await _ch.invokeMethod<String>('takeScreenshot', <Object?>[outputPath]);
       return result ?? '';
     } catch (e) {
       return '';
@@ -245,8 +229,7 @@ class ScreenApi {
 
   Future<AdbCommandResult> startScreenRecording(String outputPath, int durationSeconds) async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.startScreenRecording', _channel)
-          .invokeMethod<List<dynamic>>('startScreenRecording', <Object?>[outputPath, durationSeconds]);
+      final result = await _ch.invokeMethod<List<dynamic>>('startScreenRecording', <Object?>[outputPath, durationSeconds]);
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -260,8 +243,7 @@ class ScreenApi {
 
   Future<AdbCommandResult> stopScreenRecording() async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.stopScreenRecording', _channel)
-          .invokeMethod<List<dynamic>>('stopScreenRecording');
+      final result = await _ch.invokeMethod<List<dynamic>>('stopScreenRecording');
       return AdbCommandResult(
         success: result![0] as bool,
         output: result[1] as String,
@@ -275,81 +257,10 @@ class ScreenApi {
 
   Future<String> getScreenResolution() async {
     try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.getScreenResolution', _channel)
-          .invokeMethod<String>('getScreenResolution');
+      final result = await _ch.invokeMethod<String>('getScreenResolution');
       return result ?? '';
     } catch (e) {
       return '';
-    }
-  }
-
-  Future<String> getScreenDensity() async {
-    try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.getScreenDensity', _channel)
-          .invokeMethod<String>('getScreenDensity');
-      return result ?? '';
-    } catch (e) {
-      return '';
-    }
-  }
-
-  Future<AdbCommandResult> tapScreen(int x, int y) async {
-    try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.tapScreen', _channel)
-          .invokeMethod<List<dynamic>>('tapScreen', <Object?>[x, y]);
-      return AdbCommandResult(
-        success: result![0] as bool,
-        output: result[1] as String,
-        errorCode: result[2] as int?,
-        errorMessage: result[3] as String?,
-      );
-    } catch (e) {
-      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
-    }
-  }
-
-  Future<AdbCommandResult> swipeScreen(int startX, int startY, int endX, int endY, int durationMs) async {
-    try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.swipeScreen', _channel)
-          .invokeMethod<List<dynamic>>('swipeScreen', <Object?>[startX, startY, endX, endY, durationMs]);
-      return AdbCommandResult(
-        success: result![0] as bool,
-        output: result[1] as String,
-        errorCode: result[2] as int?,
-        errorMessage: result[3] as String?,
-      );
-    } catch (e) {
-      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
-    }
-  }
-
-  Future<AdbCommandResult> inputText(String text) async {
-    try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.inputText', _channel)
-          .invokeMethod<List<dynamic>>('inputText', <Object?>[text]);
-      return AdbCommandResult(
-        success: result![0] as bool,
-        output: result[1] as String,
-        errorCode: result[2] as int?,
-        errorMessage: result[3] as String?,
-      );
-    } catch (e) {
-      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
-    }
-  }
-
-  Future<AdbCommandResult> pressKey(int keyCode) async {
-    try {
-      final result = await const MethodChannel('dev.flutter.pigeon.ScreenApi.pressKey', _channel)
-          .invokeMethod<List<dynamic>>('pressKey', <Object?>[keyCode]);
-      return AdbCommandResult(
-        success: result![0] as bool,
-        output: result[1] as String,
-        errorCode: result[2] as int?,
-        errorMessage: result[3] as String?,
-      );
-    } catch (e) {
-      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
     }
   }
 }
