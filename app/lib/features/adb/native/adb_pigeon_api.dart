@@ -263,4 +263,60 @@ class ScreenApi {
       return '';
     }
   }
+
+  Future<AdbCommandResult> tapScreen(int x, int y) async {
+    try {
+      final result = await _ch.invokeMethod<List<dynamic>>('tapScreen', <Object?>[x, y]);
+      return AdbCommandResult(
+        success: result![0] as bool,
+        output: result[1] as String,
+        errorCode: result[2] as int?,
+        errorMessage: result[3] as String?,
+      );
+    } catch (e) {
+      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
+    }
+  }
+
+  Future<AdbCommandResult> swipeScreen(int startX, int startY, int endX, int endY, int durationMs) async {
+    try {
+      final result = await _ch.invokeMethod<List<dynamic>>('swipeScreen', <Object?>[startX, startY, endX, endY, durationMs]);
+      return AdbCommandResult(
+        success: result![0] as bool,
+        output: result[1] as String,
+        errorCode: result[2] as int?,
+        errorMessage: result[3] as String?,
+      );
+    } catch (e) {
+      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
+    }
+  }
+
+  Future<AdbCommandResult> inputText(String text) async {
+    try {
+      final result = await _ch.invokeMethod<List<dynamic>>('inputText', <Object?>[text]);
+      return AdbCommandResult(
+        success: result![0] as bool,
+        output: result[1] as String,
+        errorCode: result[2] as int?,
+        errorMessage: result[3] as String?,
+      );
+    } catch (e) {
+      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
+    }
+  }
+
+  Future<AdbCommandResult> pressKey(int keyCode) async {
+    try {
+      final result = await _ch.invokeMethod<List<dynamic>>('pressKey', <Object?>[keyCode]);
+      return AdbCommandResult(
+        success: result![0] as bool,
+        output: result[1] as String,
+        errorCode: result[2] as int?,
+        errorMessage: result[3] as String?,
+      );
+    } catch (e) {
+      return AdbCommandResult(success: false, output: '', errorMessage: e.toString());
+    }
+  }
 }

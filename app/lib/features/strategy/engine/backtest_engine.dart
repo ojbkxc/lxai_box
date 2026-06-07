@@ -307,11 +307,39 @@ double _sqrt(double x) {
   return guess;
 }
 
-double pow(double base, int exp) {
+double pow(double base, double exp) {
   if (exp == 0) return 1.0;
-  double result = 1.0;
-  for (int i = 0; i < exp.abs(); i++) {
-    result *= base;
+  // 整数指数快速路径
+  if (exp == exp.roundToDouble()) {
+    double result = 1.0;
+    final intExp = exp.toInt().abs();
+    for (int i = 0; i < intExp; i++) {
+      result *= base;
+    }
+    return exp < 0 ? 1 / result : result;
   }
-  return exp < 0 ? 1 / result : result;
+  // 小数指数用对数计算: base^exp = exp(exp * ln(base))
+  double lnBase = 0.0;
+  double x = base;
+  // 自然对数近似
+  if (x > 0) {
+    double sum = 0.0;
+    // 使用换底公式: ln(x) = 2 * atanh((x-1)/(x+1))
+    double t = (x - 1) / (x + 1);
+    double tPow = t;
+    for (int i = 1; i <= 20; i++) {
+      sum += tPow / (2 * i - 1);
+      tPow *= t * t;
+    }
+    lnBase = 2 * sum;
+  }
+  // exp 近似
+  double eResult = 1.0;
+  double eTerm = 1.0;
+  double eX = exp * lnBase;
+  for (int i = 1; i < 30; i++) {
+    eTerm *= eX / i;
+    eResult += eTerm;
+  }
+  return eResult;
 }
