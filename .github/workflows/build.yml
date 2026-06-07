@@ -24,11 +24,18 @@ jobs:
 
       - name: Generate Android platform files
         working-directory: app
-        run: flutter create --org com.lanxing --project-name lxai_box --platforms android .
+        run: flutter create --org com.lanxing --project-name lxai_box --platforms android --force .
+
+      - name: Verify generated files
+        run: |
+          echo "--- Checking android/app/build.gradle ---"
+          ls -la app/android/app/build.gradle || echo "NOT FOUND"
+          echo "--- Checking AndroidManifest.xml ---"
+          ls -la app/android/app/src/main/AndroidManifest.xml || echo "NOT FOUND"
 
       - name: Patch Android project
         run: |
-          # Add Shizuku dependency
+          # Add Shizuku dependency to build.gradle
           sed -i '/^flutter {/i \
           dependencies {\
               implementation '\''dev.rikka.shizuku:api:13.1.5'\''\
