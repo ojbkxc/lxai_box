@@ -27,17 +27,15 @@ jobs:
         run: flutter create --org com.lanxing --project-name lxai_box --platforms android .
 
       - name: Patch Android project
-        working-directory: app
         run: |
-          # Add Shizuku dependency to app/build.gradle
+          # Add Shizuku dependency
           sed -i '/^flutter {/i \
           dependencies {\
               implementation '\''dev.rikka.shizuku:api:13.1.5'\''\
-          }' android/app/build.gradle
+          }' app/android/app/build.gradle
 
-          # Add permissions and Shizuku meta-data to AndroidManifest.xml
-          sed -i 's|<manifest xmlns:android|<manifest xmlns:android\n    <uses-permission android:name="android.permission.RECORD_AUDIO"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>\n    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|' android/app/src/main/AndroidManifest.xml
-          sed -i 's|android:usesCleartextTraffic="true"|android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml || true
+          # Add permissions to AndroidManifest
+          sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>\n    <uses-permission android:name="android.permission.RECORD_AUDIO"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>' app/android/app/src/main/AndroidManifest.xml
 
       - name: Restore custom Kotlin source files
         run: |
