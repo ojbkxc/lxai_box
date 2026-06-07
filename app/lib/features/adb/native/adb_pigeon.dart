@@ -1,5 +1,5 @@
 /// ADB 原生桥接数据模型定义
-/// 实际的 API 实现在 adb_pigeon.g.dart 中
+/// 实际的 API 实现在 adb_pigeon_api.dart 中
 
 /// ADB 命令执行结果
 class AdbCommandResult {

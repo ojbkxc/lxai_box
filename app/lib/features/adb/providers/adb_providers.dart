@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../native/adb_pigeon.dart';
-import '../native/adb_pigeon.g.dart';
+import '../native/adb_pigeon_api.dart';
 import '../services/adb_service.dart';
 
 /// ADB 初始化状态

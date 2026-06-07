@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/adb_providers.dart';
 import '../native/adb_pigeon.dart';
-import '../native/adb_pigeon.g.dart';
+import '../native/adb_pigeon_api.dart';
 import '../services/adb_service.dart';
 
 /// ADB 工具页面
